@@ -1,0 +1,24 @@
+universe = docker
+docker_image = michaelbornholdt/deep_profiler:tf2_v15
+
+accounting_group = COBA
+requirements = (Machine == "coba2000.chtc.wisc.edu")
+
+executable = sample.sh
+transfer_executable = true
+arguments = $(Cluster)
+
+output = $(Cluster).out
+error = $(Cluster).err
+log = $(Cluster).log
+
+# no GPU is needed for sampling. A large amount of RAM memory should allow for fast sampling
+request_cpus = 8
+request_memory = 50 GB
+request_disk = 5 GB
+
+# These two files are transfered from submission to run server
+transfer_input_files = config_sample.json, 924_index.csv
+should_transfer_files = YES
+
+queue
