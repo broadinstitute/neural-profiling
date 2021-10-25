@@ -187,9 +187,18 @@ The final part of the command send all std_out and std_err to the log file.
                 "label_smoothing": 0.0,
                 "feature_dim": 256,
                 "pooling": "avg"
+            },
+            "lr_schedule": "cosine"
 ```
 Relevant parameters are augmentation, epochs, learning_rate, batch_size and label_smoothing.
 Details on these can be found in the [DeepProfiler documentation](https://github.com/cytomining/DeepProfiler/wiki).
+
+For Resnet use: 
+```json
+"name": "resnet",
+"conv_blocks": 50,
+```
+
 
 ## 5. Profile
 
