@@ -3,9 +3,9 @@
 This README gives a practical guide to working on the Wiscon Center for High Throughput Computing (CHTC). 
 Depending on which version of Deepprofiler you are using, the commands may differ marginaly. 
 
-I am currently writing this guide for the `tf2` branch of DP on the 5th of October 2021. 
-All files used in the CHTC can be found in the DP2.1 folder. 
-The DP2.0 folder contains old versions of these files. 
+I am currently writing this guide for the `0.3.0` version of DP on the 20th of November 2021. 
+All files used in the CHTC can be found in the DP_0.3.0 folder. 
+The old_DP folder contains old versions of these files. 
 
 While surely not perfect, my setup on CHTC submission server served me well and I will thus present the contents of each folder in the relevant subsection. 
 For further reference, here is the relevant structure of the [Docker](https://hub.docker.com/r/michaelbornholdt/deep_profiler/tags?page=1&ordering=last_updated) on the CHTC run server.  
@@ -46,43 +46,36 @@ Here are your most important condor commands and files:
 # Pipeline
 
 The normal pipeline for this project was the following
-1. Decide on a subsection data to train on. That can be only part of all classes or all classes but sampled at a smaller fraction. 
-2. Sample those crops with a sample-sc command
+1. Export all single cells with the `export-sc` command. (This has been done already: `/outputs/1017_sc/`)
+2. Decide on a subsection data to train on. That can be only part of all classes or all classes but sampled at a smaller fraction. Change the `split` columns of the metadata file to determine which cells go in training, testing and unused - according to your subselection. 
 3. Make sure all crops are valid (check for zero images)
 4. Train a model 
 5. Profile / infer the profiles
 6. Aggregate 
 7. Move to cytominer-eval 
 
-## 1. index creation 
 
-The creation of different training indexes is discussed in my thesis and can be traced in the `creating_indexes` noteook in the `train/index` folder. 
-All sites will be allocated for either training, validation or unused in the 'Split' column of the index.csv. 
-Only the sites marked as 'training' will then cropped to be randomly accessible during training.
-
-Index file example: [826_index.csv](../index/826_index.csv)
-
-## 2. Sampling
+## 1. Exporting single cells
 
 The sampling folder on the submit server will typically look like this
 ```
 .
-+-- sampling
-|   +-- sample.sh
-|   +-- sample.sub
-|   +-- config_sample.json
++-- exporting
+|   +-- export.sh
+|   +-- export.sub
+|   +-- config_export.json
 |   +-- 924_index.csv
 |   +-- XXXXXXXX.log 
 |   +-- XXXXXXXX.err
 |   +-- XXXXXXXX.out
 ```
 
-### sample.sub
+### export.sub
 
 The first few lines of all submission files are the same.
 ```bash
 universe = docker
-docker_image = michaelbornholdt/deep_profiler:tf2_v15
+docker_image = michaelbornholdt/deep_profiler:tf2_2.0
 ```
 This defines which docker will be mounted. [Be careful!]() Never build a docker file with the same name as an old one. 
 CHTC will not pull the new docker if it knows the name but use a cached version.  
@@ -100,35 +93,48 @@ arguments = $(Cluster)
 Here you define your executable files and input arguments. 
 
 ```commandline
++LongJob = true
+```
+This is crucial so your exporting can run longer than 72 hours. 18 Million cells took around a week.
+
+```commandline
 output = $(Cluster).out
 error = $(Cluster).err
 log = $(Cluster).log
 ```
 Finally your output files are named. These are just useful conventions that can be changed.
 
-### sample.sh
+### export.sh
 
 The main command from [sample.sh](DP2.1/sampling/sample.sh) is 
 ```
-python3 deepprofiler --root=/local_group_storage/broad_data/michael/training/ --config=config_sample.json --metadata=924_index.csv --sample=1004_sample sample-sc
+python3 deepprofiler --gpu=3 --root=/local_group_storage/broad_data/michael/training/ --config=config_sample.json --metadata=sub_index.csv --single-cells=1017_sc export-sc
 ```
-Note that `/local_group_storage/broad_data/michael/training/` is my project folder in the CHTC structure and `--sample=1004_sample` determines the folder in which the crops will be placed.
+Note that `/local_group_storage/broad_data/michael/training/` is my project folder in the CHTC structure and `--single-cells=1017_sc` determines the folder in which the crops will be placed.
 
-Also note that the first lines of sample.sh move the input files (`config_sample.json` and `index_924.csv`) into the correct position in the DeepProfiler structure.
+Also note that the first lines of sample.sh move the input file `config_sample.json` into the correct position in the DeepProfiler structure.
 This method will be used in all other bash files.
 
-### config_sample.json
+### config_export.json
 
-In the [config_sample.json](DP2.1/sampling/config_sample.json), only the following lines are relevant.
+In the [config_export.json](DP_0.3.0/exporting/config_export.json), only the following lines are relevant.
 ```json
  "sampling": {
-            "factor": 0.5,
+            "factor": 1,
             "workers": 16,
             "cache_size": 40000
             }
 ```
 The factor number defines the fraction of cells cropped in each site. 
 
+## 2. Manipulate metadata file.
+
+The creation of old training indexes can be traced in the `old_index_maker` notebook in the `train/index` folder. 
+All sites will be allocated for either training, validation or unused in the 'Split' column of the index.csv.
+Index file example: [826_index.csv](../index/826_index.csv)
+
+The new way with 0.3.0 is to manipulate the sc-metadata.csv file that is created during exporting. Again, the `split` column will determine how these cells will be used during training. 
+The `helper_functions/sc-metadata.py` gives an example on how to manipulate this file (also see `/training/index`). 
 
 ## 3. Validating crops
 
@@ -160,11 +166,11 @@ Your train folder may look like this
 ```
 ### train.sh
 
-The [train.sh](DP2.1/train/train.sh) file moves the config to the correct location and then outputs the config for documentation. 
+The [train.sh](DP_0.3.0/train/train.sh) file moves the config to the correct location and then outputs the config for documentation. 
 
 You then define the name of the experiment (I used numbers that refered to dates) and then run the training with the following command:
 ```commandline
-python3 deepprofiler --gpu=0 --metadata=826_index.csv --exp=${NR}_train --sample=826_sample --root=/local_group_storage/broad_data/michael/training --config=config_train.json train --epoch 1 2>&1 | tee /local_group_storage/broad_data/michael/log_${NR}_train.txt
+python3 deepprofiler --gpu=0 --metadata=826_index.csv --exp=${NR}_train --single-cells=1017_sc  --root=/local_group_storage/broad_data/michael/training --config=config_train.json train --epoch 1 2>&1 | tee /local_group_storage/broad_data/michael/log_${NR}_train.txt
 ```
 Make sure that you are training on an unused gpu (you can check with nvidia-smi beforehand) and make sure that you are using the right sample folder. 
 You can also change the epoch value if you want to train on top of a already trained model. 
@@ -181,7 +187,7 @@ The final part of the command send all std_out and std_err to the log file.
             "epochs": 20,
             "initialization":"ImageNet",
             "params": {
-                "learning_rate": 0.01,
+                "learning_rate": 0.02,
                 "batch_size": 256,
                 "conv_blocks": 0,
                 "label_smoothing": 0.0,
@@ -225,6 +231,17 @@ If you want to get the class predictions instead of the profiles, you need to si
     }
 }
 ```
+
+If you want to use the pre-trained models to infer features, then use:
+```json
+  "profile": {
+      "feature_layer": "pool5",
+      "checkpoint": "None",
+      "batch_size": 512
+    }
+}
+```
+
 
 ## 6. Aggregate
 

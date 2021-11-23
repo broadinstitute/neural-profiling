@@ -13,7 +13,7 @@ echo "-------------"
 NR=1004
 
 mkdir /local_group_storage/broad_data/michael/training/outputs/${NR}_train/
-python3 deepprofiler --gpu=0 --metadata=826_index.csv --exp=${NR}_train --sample=826_sample --root=/local_group_storage/broad_data/michael/training --config=config_train.json train --epoch 1 2>&1 | tee /local_group_storage/broad_data/michael/log_${NR}_train.txt
+python3 deepprofiler --gpu=0 --metadata=sc_1027.csv --exp=${NR}_train --single-cells=1017_sc --root=/local_group_storage/broad_data/michael/training --config=config_train.json train --epoch 1 2>&1 | tee /local_group_storage/broad_data/michael/log_${NR}_train.txt
 
 
 echo "-------------"
