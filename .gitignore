@@ -1,1 +1,5 @@
 /pre-trained/efficient_net/aggregated/old/
+/pre-trained/efficient_net/old/
+/pre-trained/efficient_net/output_example/down.py
+/pre-trained/efficient_net/output_example/redo.csv
+/pre-trained/efficient_net/post_processing/old/

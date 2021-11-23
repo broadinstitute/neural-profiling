@@ -108,17 +108,8 @@ class evaluation():
             hitk_percent_list=eval_range
         )
 
-        # if operation == 'precision_recall':
-        #     top_prc = res[res['Metadata_moa'].isin(self.top_moa)].reset_index(drop=True)
-        #     pr_av = []
-        #     for k in top_prc.k.unique():
-        #         pr_av.append(top_prc.query("k==@k").mean().tolist())
-        #     res = pd.DataFrame(pr_av, columns=["k", "precision", "recall"])
-        # if operation == 'hitk':
-        #     size = len(self.df)
-        #     ls = list(res[1].values())
-        #     res = (res[0], [x/size for x in ls])
         return res
+
 
 class plotting():
     def accuracy(title, index1, label_1, index2 = None, label_2 = None, index3 = None, label_3 = None,):
