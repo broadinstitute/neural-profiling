@@ -3,3 +3,6 @@
 /pre-trained/efficient_net/output_example/down.py
 /pre-trained/efficient_net/output_example/redo.csv
 /pre-trained/efficient_net/post_processing/old/
+
+/archive/*
+/pre-trained/efficient_net/output_example/SQ00014812/
