@@ -5,21 +5,54 @@ Read the documentation of DeepProfiler (DP) to understand the following.
 ## Folder structure
 ```commandline
 .
+├── README.md
 ├── ResNet50v2
 │   ├── aggregated
+│   │   ├── aggregate.ipynb
+│   │   ├── aggregated_resnet_median.csv
+│   │   ├── full_well_index.csv
+│   │   ├── level3_resnet.csv
+│   │   ├── raw.csv
+│   │   └── testing_resnet_output.ipynb
 │   └── post_processing
+│       ├── Compare_eff_res_cp.ipynb
+│       └── normalization.ipynb
 ├── data-prep
 │   ├── 01_location_extraction
+│   │   ├── README.md
+│   │   ├── extract.py
+│   │   ├── location_test.ipynb
+│   │   └── split.py
 │   └── 02_index_preperation
+│       ├── 00_create_index.ipynb
+│       ├── 01_enrich_index.ipynb
+│       ├── 02_clean_index.ipynb
+│       ├── README.md
+│       ├── barcode_platemap.csv
+│       ├── enriched_index.csv
+│       ├── full_index.csv
+│       ├── full_well_index.csv
+│       ├── original_index.csv
+│       ├── repurposing_info_external_moa_map_resolved.tsv
+│       └── sub_index.csv
 ├── efficient_net
 │   ├── aggregated
-│   │   └── index
-│   ├── post_processing
-│   │   ├── __pycache__
-│   │   ├── images
-│   │   └── old
-│   └── results
+│   │   ├── README.md
+│   │   ├── aggregated_efficientnet_median.csv
+│   │   ├── run_aggregation.py
+│   │   └── testing_efficientnet.ipynb
+│   └── post_processing
+│       ├── PCA_plots.ipynb
+│       ├── consensus_spherized_dmso_eff_mean.csv
+│       ├── efficientnet_full_analysis.ipynb
+│       └── normalization.ipynb
 └── thesis
+    ├── 0_PCA_visualizatino.ipynb
+    ├── 0_compare_arch.ipynb
+    ├── 0_normalization.ipynb
+    ├── batch_effect.ipynb
+    ├── random_subsets.ipynb
+    └── subselection_performance.ipynb
 ```
 ResNet50v2 and efficient_net are the folders dealing with the profiles of both per-trained nets.
 Thesis holds some high level analyses. 

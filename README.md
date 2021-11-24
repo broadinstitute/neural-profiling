@@ -12,12 +12,89 @@ In `/training/index` you can find all the index files for the different subsets 
 The `/training/runs` folder holds all profiles and training output from each experiment. 
 
 ## Folder structure
+```commandline
+.
+├── LINCS_example_data
+│   ├── inputs
+│   │   ├── config
+│   │   ├── images
+│   │   ├── locations
+│   │   └── metadata
+│   └── outputs
+├── baseline
+│   ├── 01_data
+│   │   ├── level_3_data
+│   │   └── level_5_data
+│   ├── 02_analysis
+│   └── thesis
+├── chtc
+│   ├── DP_0.3.0
+│   │   ├── aggregate
+│   │   ├── checking
+│   │   ├── profile
+│   │   ├── sampling
+│   │   └── train
+│   ├── helper_functions
+│   └── old_DP
+│       ├── aggregate
+│       ├── checking
+│       ├── exporting
+│       ├── profile
+│       └── train
+├── docker
+│   ├── 0.3.0
+│   └── old_versions
+├── hit_k
+├── pre-trained
+│   ├── ResNet50v2
+│   │   ├── aggregated
+│   │   └── post_processing
+│   ├── data-prep
+│   │   ├── 01_location_extraction
+│   │   └── 02_index_preperation
+│   ├── efficient_net
+│   │   ├── aggregated
+│   │   └── post_processing
+│   └── thesis
+├── training
+│   ├── aggregation
+│   ├── index
+│   │   └── sc-metadata
+│   ├── prediction_analysis
+│   │   └── 819
+│   ├── results
+│   │   └── accuracy
+│   └── runs
+│       ├── 1003
+        ... 
+│       └── 931
+└── utils
+```
 
+## Description of the repository content
+### `basline/`
+The first part of the project gathers CellProfiler profiles from the LINCS repository and compares them. 
+A general overview of the data and of the subselection is found here! 
+If you want to compare metrics with my data, you need to follow the steps in `baseline/02_analysis/02_clean_data.ipynb`.
 
-## Important random things
-- Some information in this repository may be old since the DeepProfiler versions changed midway through the project
-- The single cell crops of all 18 million cells within the LINCS subsection can be found on S3: `s3://jump-cellpainting/projects/2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad/workspace/deep_learning/outputs/1017_sc/`
-- If you can't reach Michael Bornholdt, try to reach Shantanu Singh. 
+### `pre-trained/`
+The two pre-trained nets are compared here and create the baseline for the trained neural networks. 
+The best pipeline for deep learning features is determined.
+
+### `training/`
+All experiments live here. 
+The experiments are different models trained with different hyperparameters and data. 
+A full analysis of the resulting profiles can be found in the `training/results/` folder. 
+
+### `chtc/` and `docker/`
+These folders hold important scripts for setting up and running DeepProfiler on a server.
+
+### `hit_k`
+This folder contains the development code of the hit@k metric. Now on Cyto-eval/ 
+
+### `LINCS_example_data/`
+A small subsection of the LINCS data allows to test and learn DP. 
+Alternatively used example data from DP Github.
 
 
 ## Experimental data on S3
@@ -31,4 +108,11 @@ The `/training/runs` folder holds all profiles and training output from each exp
 - logs of experiments: `s3://jump-cellpainting/projects/2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad/workspace/deep_learning/logs/`
 - models: `s3://jump-cellpainting/projects/2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad/workspace/deep_learning/models/`
 - LINCS subsets crop (18 million): `s3://jump-cellpainting/projects/2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad/workspace/deep_learning/crops/`
+
+
+
+## Important random things
+- Some information in this repository may be old since the DeepProfiler versions changed midway through the project
+- The single cell crops of all 18 million cells within the LINCS subsection can be found on S3: `s3://jump-cellpainting/projects/2015_10_05_DrugRepurposing_AravindSubramanian_GolubLab_Broad/workspace/deep_learning/outputs/1017_sc/`
+- If you can't reach Michael Bornholdt, try to reach Shantanu Singh. 
 

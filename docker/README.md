@@ -23,7 +23,23 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 ```
 
-### Legacy 
+## Structure
+
+```commandline
+├── 0.3.0
+│   ├── Dockerfile
+│   └── Makefile
+├── README.md
+└── old_versions
+    ├── tf15
+    │   ├── Dockerfile
+    │   └── Makefile
+    └── tf2
+        ├── Dockerfile
+        └── Makefile
+```
+
+## Legacy 
 
 Until October 2021 DP was run on Tensorflow 1.5. 
 Some older Docker images thus on TF 1.5. 
