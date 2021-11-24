@@ -12,11 +12,13 @@ project_dir = os.path.join(
     os.path.dirname(__file__)
 )
 
-profile_dir = os.path.join(project_dir, "outputs", "results", "features")
+experiment = '727_profile'
+
+profile_dir = os.path.join(project_dir, "outputs", experiment, "features")
 
 index_file = os.path.join(project_dir, "inputs", "metadata", "sub_index.csv")
 
-output_folder = os.path.join(project_dir, 'outputs',"results",'aggregated')
+output_folder = os.path.join(project_dir, 'outputs',experiment,'aggregated')
 
 well_class = AggregateDeepProfiler(
     index_file=index_file,
@@ -27,4 +29,4 @@ well_class = AggregateDeepProfiler(
 )
 df_well = well_class.aggregate_deep()
 
-df_well.to_csv('aggregated_resnet_median.csv')
+df_well.to_csv('aggregated_efficientnet_median.csv')
