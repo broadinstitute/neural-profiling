@@ -2,6 +2,29 @@
 Part 2 of the overall project, refer to the `/baseline` to read part 1  
 Read the documentation of DeepProfiler (DP) to understand the following. 
 
+## Folder structure
+```commandline
+.
+├── ResNet50v2
+│   ├── aggregated
+│   └── post_processing
+├── data-prep
+│   ├── 01_location_extraction
+│   └── 02_index_preperation
+├── efficient_net
+│   ├── aggregated
+│   │   └── index
+│   ├── post_processing
+│   │   ├── __pycache__
+│   │   ├── images
+│   │   └── old
+│   └── results
+└── thesis
+```
+ResNet50v2 and efficient_net are the folders dealing with the profiles of both per-trained nets.
+Thesis holds some high level analyses. 
+
+
 ## Getting the data
 We decided to go with the locations calculated from CellProfiler first for closer comparison, but may later take the locations coming from a Unet masking or build our own CNN which takes in images instead of images and locations. 
 

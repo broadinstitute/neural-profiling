@@ -12,6 +12,16 @@ These two lines depend on whether pycytominer.DeepProfiler_Aggregate has been ad
 
 In the future, the docker files could additionally contain example files and folder structures.
 
+## Add AWS CLI 
+It can be hard to move things from the CHTC COBA server to S3. 
+Thus installing the aws cli is helpful. 
+```commandline
+# install aws
+WORKDIR /
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+```
 
 ### Legacy 
 
